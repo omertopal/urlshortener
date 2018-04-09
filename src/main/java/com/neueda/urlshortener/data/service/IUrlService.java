@@ -6,7 +6,7 @@ import com.neueda.urlshortener.data.entity.NeuedaUrl;
 
 public interface IUrlService {
 	
-	public List<NeuedaUrl> findByShortUrl(String shortUrl);
+	public List<NeuedaUrl> findByShortUrl(String shortUrl) throws Exception;
 	
-	public NeuedaUrl insertUrl(NeuedaUrl url);
+	public NeuedaUrl insertUrl(NeuedaUrl url) throws Exception;
 }

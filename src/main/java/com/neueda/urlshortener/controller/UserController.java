@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,12 +15,12 @@ import com.neueda.urlshortener.data.entity.NeuedaUrl;
 import com.neueda.urlshortener.data.service.IUrlService;
 import com.neueda.urlshortener.error.NeuedaInternalServerErrorException;
 import com.neueda.urlshortener.error.NeuedaNotAcceptableException;
-import com.neueda.urlshortener.util.UrlConstants;
 import com.neueda.urlshortener.util.UrlUtils;
 
 @RestController
 @RequestMapping("")
 public class UserController {
+	private static final Logger log = Logger.getLogger(UserController.class);
 	
 	@Autowired
 	private IUrlService urlService;		
@@ -27,6 +28,8 @@ public class UserController {
 	@RequestMapping(value = "/{shortUrl}", method = RequestMethod.GET)
     public void redirect(@PathVariable String shortUrl, HttpServletResponse resp) {
         try{
+        	log.debug("redirect method initiated with parameters: shortUrl"+ shortUrl);
+        	
 			if (!UrlUtils.isShortUrlValid(shortUrl)){			
 				throw new NeuedaNotAcceptableException();
 			}
@@ -45,7 +48,8 @@ public class UserController {
         }catch (NeuedaNotAcceptableException e) {
 			throw e;
 		}catch (Exception e) {
-			throw new NeuedaInternalServerErrorException(UrlConstants.STRING_BLANK);
+			log.error(e);
+			throw new NeuedaInternalServerErrorException();
 		}
     }
 }

@@ -7,6 +7,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,11 +25,11 @@ import com.neueda.urlshortener.util.UrlUtils;
 @RestController
 @RequestMapping("/api/v1")
 public class ApiControllerV1 {	
+	private static final Logger log = Logger.getLogger(ApiControllerV1.class);
 	
 	@Autowired
 	private IUrlService urlService;
 	
-		
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RequestMapping(value = "shorten", method = RequestMethod.POST)
@@ -36,6 +37,7 @@ public class ApiControllerV1 {
     							@RequestParam(name="createUser", required=true, defaultValue="")  String createUser,HttpServletResponse resp) {  				
 		
 		try{
+			log.debug("shortenUrl method initiated with parameters: longUrl="+ longUrl+"createUser="+ createUser );
 			
 			boolean isGeneratedShortUrlUnique = false;
 			String generatedShortUrl = UrlConstants.STRING_BLANK;
@@ -55,10 +57,13 @@ public class ApiControllerV1 {
 			urlToBeCreated.setShortUrl(generatedShortUrl);
 			
 			NeuedaUrl urlInserted= urlService.insertUrl(urlToBeCreated);
-			return urlInserted;
+			return urlInserted;						
 			
 		}catch (Exception e) {
-			throw new NeuedaInternalServerErrorException(UrlConstants.STRING_BLANK);
+			log.error(e);
+			throw new NeuedaInternalServerErrorException();
+		}finally {
+			log.debug("shortenUrl method exited");
 		}
     }
 	
@@ -77,7 +82,8 @@ public class ApiControllerV1 {
 		}catch (NeuedaUrlNotFoundException e) {
 			throw e;
 		}catch (Exception e) {
-			throw new NeuedaInternalServerErrorException(UrlConstants.STRING_BLANK);
+			log.error(e);
+			throw new NeuedaInternalServerErrorException();
 		}
     }
 	
@@ -96,7 +102,8 @@ public class ApiControllerV1 {
 		}catch (NeuedaUrlNotFoundException e) {
 			throw e;
 		}catch (Exception e) {
-			throw new NeuedaInternalServerErrorException(UrlConstants.STRING_BLANK);
+			log.error(e);
+			throw new NeuedaInternalServerErrorException();
 		}
     }
 		

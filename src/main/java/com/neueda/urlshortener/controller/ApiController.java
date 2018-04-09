@@ -13,7 +13,7 @@ import com.neueda.urlshortener.error.NeuedaForbiddenException;
 @RestController
 @RequestMapping("/api")
 public class ApiController {
-	 
+	
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
     @RequestMapping(value = "", method = RequestMethod.GET)

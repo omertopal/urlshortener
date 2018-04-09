@@ -17,6 +17,12 @@ public class NeuedaUrl {
 	
 	private Date createDate;	
 	
+	
+	@Override
+	public String toString() {
+		return new com.google.gson.Gson().toJson(this);
+	}	
+
 	public Date getCreateDate() {
 		return createDate;
 	}
