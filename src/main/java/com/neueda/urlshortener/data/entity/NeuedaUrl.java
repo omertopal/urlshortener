@@ -1,5 +1,7 @@
 package com.neueda.urlshortener.data.entity;
 
+import java.util.Date;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,6 +15,16 @@ public class NeuedaUrl {
 	
 	private String createUser;	
 	
+	private Date createDate;	
+	
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
 	public String getShortUrl() {
 		return shortUrl;
 	}

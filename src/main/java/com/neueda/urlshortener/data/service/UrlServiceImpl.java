@@ -9,7 +9,7 @@ import com.neueda.urlshortener.data.entity.NeuedaUrl;
 import com.neueda.urlshortener.data.repo.UrlMongoRepo;
 
 @Service
-public class UrlService implements IUrlService {
+public class UrlServiceImpl implements IUrlService {
 	
 	@Autowired
     private UrlMongoRepo mongoRepository;
@@ -20,9 +20,8 @@ public class UrlService implements IUrlService {
 	}
 
 	@Override
-	public NeuedaUrl insertUrl(NeuedaUrl url) {
+	public NeuedaUrl insertUrl(NeuedaUrl url) {		
 		return mongoRepository.insert(url);
-	}
-	
+	}	
 	
 }

@@ -1,11 +1,12 @@
 package com.neueda.urlshortener.data.model;
 
-public class UrlModel {
-	
+public class UrlModel {	
+
 	private String shortUrl;
 	
 	private String longUrl;
 	
+	private String createUser;
 	
 	public String getShortUrl() {
 		return shortUrl;
@@ -21,6 +22,14 @@ public class UrlModel {
 
 	public void setLongUrl(String longUrl) {
 		this.longUrl = longUrl;
+	}
+
+	public String getCreateUser() {
+		return createUser;
+	}
+
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
 	}
 
 }

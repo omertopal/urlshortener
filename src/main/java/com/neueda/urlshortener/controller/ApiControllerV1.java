@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.neueda.urlshortener.data.entity.NeuedaUrl;
 import com.neueda.urlshortener.data.service.IUrlService;
+import com.neueda.urlshortener.util.DateUtils;
+import com.neueda.urlshortener.util.UrlConstants;
 import com.neueda.urlshortener.util.UrlUtils;
 
 @Controller
@@ -24,29 +26,54 @@ public class ApiControllerV1 {
 	@Autowired
 	private IUrlService urlService;
 	
-	@Produces({MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@RequestMapping(value = "shorten", method = RequestMethod.GET)
+	@RequestMapping(value = "shorten", method = RequestMethod.POST)
     public NeuedaUrl shortenUrl(@RequestParam(name="longUrl", required=true, defaultValue="")  String longUrl,
     							@RequestParam(name="createUser", required=true, defaultValue="")  String createUser,HttpServletResponse resp) throws Exception {  				
+
+		boolean isGeneratedShortUrlUnique = false;
+		String generatedShortUrl = UrlConstants.STRING_BLANK;
 		
-		String shortUrl = UrlUtils.shortenUrl(longUrl);
-		NeuedaUrl urltoCreate = new NeuedaUrl();
-		urltoCreate.setShortUrl(shortUrl);
-		urltoCreate.setLongUrl(longUrl);
-		urltoCreate.setCreateUser(createUser);
-		NeuedaUrl urlInserted= urlService.insertUrl(urltoCreate);
+		NeuedaUrl urlToBeCreated = new NeuedaUrl();		
+		urlToBeCreated.setLongUrl(longUrl);
+		urlToBeCreated.setCreateUser(createUser);
+		urlToBeCreated.setCreateDate(DateUtils.getCurrentDate());
+		
+		while(!isGeneratedShortUrlUnique){
+			generatedShortUrl = UrlUtils.generateShortUrl();
+			//check if this short url already exists in db
+			List<NeuedaUrl> urlsFound = urlService.findByShortUrl(generatedShortUrl);
+			if(urlsFound.isEmpty())
+				isGeneratedShortUrlUnique = true;
+		}
+		urlToBeCreated.setShortUrl(generatedShortUrl);
+		
+		NeuedaUrl urlInserted= urlService.insertUrl(urlToBeCreated);
 		    
 		return urlInserted;        
     }
 	
-	@Produces({MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@RequestMapping(value = "expand", method = RequestMethod.GET)
+    public String getExpandedUrl(@RequestParam(name="shortUrl", required=true, defaultValue="")  String shortUrl, HttpServletResponse resp) throws Exception {  
+		
+		List<NeuedaUrl> urlsFound = urlService.findByShortUrl(shortUrl);
+		if(urlsFound.size()==1)
+			return urlsFound.get(0).getLongUrl();
+		return null;        
+    }
+	
+	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RequestMapping(value = "info", method = RequestMethod.GET)
-    public List<NeuedaUrl> getUrlInfo(@RequestParam(name="shortUrl", required=true, defaultValue="")  String shortUrl, HttpServletResponse resp) throws Exception {  
+    public NeuedaUrl getUrlInfo(@RequestParam(name="shortUrl", required=true, defaultValue="")  String shortUrl, HttpServletResponse resp) throws Exception {  
 		
-		List<NeuedaUrl> urlList = urlService.findByShortUrl(shortUrl);
-				     
-		return urlList;        
+		List<NeuedaUrl> urlsFound = urlService.findByShortUrl(shortUrl);
+		if(urlsFound.size()==1)
+			return urlsFound.get(0);
+		return null;       
     }
+		
 }
