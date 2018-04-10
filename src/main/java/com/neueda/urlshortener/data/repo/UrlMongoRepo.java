@@ -14,5 +14,9 @@ public interface UrlMongoRepo extends MongoRepository<NeuedaUrl, Long> {
 
 	 public List<NeuedaUrl> findByShortUrl(@Param("shortUrl") String shortUrl);
 	 
-	 public NeuedaUrl insert(@Param("url") NeuedaUrl url);
+	 @SuppressWarnings("unchecked")
+	 public NeuedaUrl insert(@Param("url") NeuedaUrl urlToBeCreated);
+	 
+	 @SuppressWarnings("unchecked")
+	 public NeuedaUrl save(@Param("url") NeuedaUrl urlToBeEdited);
 }

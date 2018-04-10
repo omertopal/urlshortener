@@ -9,4 +9,6 @@ public interface IUrlService {
 	public List<NeuedaUrl> findByShortUrl(String shortUrl) throws Exception;
 	
 	public NeuedaUrl insertUrl(NeuedaUrl url) throws Exception;
+	
+	public NeuedaUrl saveUrl(NeuedaUrl url) throws Exception;
 }

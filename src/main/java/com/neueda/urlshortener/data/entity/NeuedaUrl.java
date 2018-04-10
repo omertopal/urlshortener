@@ -13,6 +13,8 @@ public class NeuedaUrl {
 	
 	private String longUrl;
 	
+	private String urlTitle;
+	
 	private String createUser;	
 	
 	private Date createDate;	
@@ -53,6 +55,14 @@ public class NeuedaUrl {
 
 	public void setCreateUser(String createUser) {
 		this.createUser = createUser;
+	}
+
+	public String getUrlTitle() {
+		return urlTitle;
+	}
+
+	public void setUrlTitle(String urlTitle) {
+		this.urlTitle = urlTitle;
 	}
 
 }
