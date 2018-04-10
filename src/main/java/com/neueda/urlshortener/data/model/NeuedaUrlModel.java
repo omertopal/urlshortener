@@ -5,6 +5,16 @@ import java.util.List;
 
 public class NeuedaUrlModel {	
 	
+	public NeuedaUrlModel() {
+	}
+
+	public NeuedaUrlModel(String longUrl, String urlTitle, String createUser) {
+		super();
+		this.longUrl = longUrl;
+		this.urlTitle = urlTitle;
+		this.createUser = createUser;
+	}
+
 	private String shortUrl;
 	
 	private String longUrl;

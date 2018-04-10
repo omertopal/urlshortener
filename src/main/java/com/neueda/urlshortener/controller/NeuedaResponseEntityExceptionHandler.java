@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.neueda.urlshortener.error.NeuedaEmptyInputException;
 import com.neueda.urlshortener.error.NeuedaErrorDetails;
 import com.neueda.urlshortener.error.NeuedaForbiddenException;
 import com.neueda.urlshortener.error.NeuedaInternalServerErrorException;
@@ -43,4 +44,11 @@ public class NeuedaResponseEntityExceptionHandler extends ResponseEntityExceptio
 		NeuedaErrorDetails errorDetails = new NeuedaErrorDetails(new Date(), ex.getMessage(), request.getDescription(true));
 		return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	@ExceptionHandler(NeuedaEmptyInputException.class)
+	public final ResponseEntity<NeuedaErrorDetails> handleInternalServerErrorException(NeuedaEmptyInputException ex, WebRequest request) {
+		NeuedaErrorDetails errorDetails = new NeuedaErrorDetails(new Date(), ex.getMessage(), request.getDescription(true));
+		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_ACCEPTABLE);
+	}
+	
 }

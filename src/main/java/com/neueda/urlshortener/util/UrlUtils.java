@@ -37,6 +37,16 @@ public class UrlUtils {
 		return urlModel;
 	}
 	
+	public static NeuedaUrl mapToUrlEntity (NeuedaUrlModel urlModel){
+		NeuedaUrl urlEntity = new NeuedaUrl();
+		urlEntity.setShortUrl(urlModel.getShortUrl());
+		urlEntity.setLongUrl(urlModel.getLongUrl());
+		urlEntity.setUrlTitle(urlModel.getUrlTitle());
+		urlEntity.setCreateUser(urlModel.getCreateUser());
+		urlEntity.setCreateDate(urlModel.getCreateDate());		
+		return urlEntity;
+	}
+	
 	public static NeuedaUrlClickModel mapToUrlClickModel (NeuedaUrlClick url){
 		NeuedaUrlClickModel urlClickModel = new NeuedaUrlClickModel();
 		urlClickModel.setShortUrl(url.getShortUrl());
