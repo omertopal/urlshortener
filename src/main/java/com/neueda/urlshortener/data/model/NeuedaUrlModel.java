@@ -1,14 +1,10 @@
-package com.neueda.urlshortener.data.entity;
+package com.neueda.urlshortener.data.model;
 
 import java.util.Date;
+import java.util.List;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document(collection = "urls")
-public class NeuedaUrl {	
+public class NeuedaUrlModel {	
 	
-	@Id
 	private String shortUrl;
 	
 	private String longUrl;
@@ -17,7 +13,9 @@ public class NeuedaUrl {
 	
 	private String createUser;	
 	
-	private Date createDate;		
+	private Date createDate;	
+	
+	private List<NeuedaUrlClickModel> clicks;
 	
 	@Override
 	public String toString() {
@@ -62,6 +60,14 @@ public class NeuedaUrl {
 
 	public void setUrlTitle(String urlTitle) {
 		this.urlTitle = urlTitle;
+	}
+
+	public List<NeuedaUrlClickModel> getClicks() {
+		return clicks;
+	}
+
+	public void setClicks(List<NeuedaUrlClickModel> clicks) {
+		this.clicks = clicks;
 	}
 
 }

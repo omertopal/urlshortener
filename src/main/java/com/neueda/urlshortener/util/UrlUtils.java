@@ -1,6 +1,14 @@
 package com.neueda.urlshortener.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.RandomStringUtils;
+
+import com.neueda.urlshortener.data.entity.NeuedaUrl;
+import com.neueda.urlshortener.data.entity.NeuedaUrlClick;
+import com.neueda.urlshortener.data.model.NeuedaUrlClickModel;
+import com.neueda.urlshortener.data.model.NeuedaUrlModel;
 
 public class UrlUtils {
 	
@@ -16,5 +24,26 @@ public class UrlUtils {
 		else
 			return true;
 	}
-
+	
+	public static NeuedaUrlModel mapToUrlModel (NeuedaUrl url){
+		NeuedaUrlModel urlModel = new NeuedaUrlModel();
+		urlModel.setShortUrl(url.getShortUrl());
+		urlModel.setLongUrl(url.getLongUrl());
+		urlModel.setUrlTitle(url.getUrlTitle());
+		urlModel.setCreateUser(url.getCreateUser());
+		urlModel.setCreateDate(url.getCreateDate());
+		List<NeuedaUrlClickModel> clicks = new ArrayList<>();
+		urlModel.setClicks(clicks);
+		return urlModel;
+	}
+	
+	public static NeuedaUrlClickModel mapToUrlClickModel (NeuedaUrlClick url){
+		NeuedaUrlClickModel urlClickModel = new NeuedaUrlClickModel();
+		urlClickModel.setShortUrl(url.getShortUrl());
+		urlClickModel.setIpAddress(url.getIpAddress());
+		urlClickModel.setIpLocation(url.getIpLocation());
+		urlClickModel.setClickDate(url.getClickDate());
+		return urlClickModel;
+		
+	}
 }

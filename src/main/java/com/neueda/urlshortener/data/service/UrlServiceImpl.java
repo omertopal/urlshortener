@@ -19,7 +19,7 @@ public class UrlServiceImpl implements IUrlService {
 	@Override
 	public List<NeuedaUrl> findByShortUrl(String shortUrl) throws Exception {
 		try{
-			log.debug("findByShortUrl method initiated with parameters: shortUrl:"+shortUrl);
+			log.debug("UrlServiceImpl.findByShortUrl method initiated with parameters: shortUrl:"+shortUrl);
 			return mongoRepository.findByShortUrl(shortUrl);	
 		}catch (Exception e) {
 			throw e;
@@ -30,7 +30,7 @@ public class UrlServiceImpl implements IUrlService {
 	@Override
 	public NeuedaUrl insertUrl(NeuedaUrl url) throws Exception{		
 		try{
-			log.debug("findByShortUrl method initiated with parameters: NeuedaUrl:" + url.toString());
+			log.debug("UrlServiceImpl.findByShortUrl method initiated with parameters: NeuedaUrl:" + url.toString());
 			return mongoRepository.insert(url);
 		}catch (Exception e) {
 			throw e;
@@ -46,6 +46,6 @@ public class UrlServiceImpl implements IUrlService {
 		}catch (Exception e) {
 			throw e;
 		}
-	}	
+	}
 	
 }

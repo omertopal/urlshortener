@@ -1,5 +1,6 @@
 package com.neueda.urlshortener.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.neueda.urlshortener.data.entity.NeuedaUrl;
+import com.neueda.urlshortener.data.entity.NeuedaUrlClick;
+import com.neueda.urlshortener.data.model.NeuedaUrlClickModel;
+import com.neueda.urlshortener.data.model.NeuedaUrlModel;
+import com.neueda.urlshortener.data.service.IUrlClickService;
 import com.neueda.urlshortener.data.service.IUrlService;
 import com.neueda.urlshortener.error.NeuedaEmptyInputException;
 import com.neueda.urlshortener.error.NeuedaInternalServerErrorException;
@@ -31,6 +36,9 @@ public class ApiControllerV1 {
 	
 	@Autowired
 	private IUrlService urlService;
+	
+	@Autowired
+	private IUrlClickService urlClickService;
 	
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -144,21 +152,30 @@ public class ApiControllerV1 {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RequestMapping(value = "info", method = RequestMethod.GET)
-    public NeuedaUrl getUrlInfo(@RequestParam(name="shortUrl", required=true, defaultValue="")  String shortUrl, HttpServletResponse resp) {  
+    public NeuedaUrlModel getUrlInfo(@RequestParam(name="shortUrl", required=true, defaultValue="")  String shortUrl, HttpServletResponse resp) {  
 		
 		try{
 			List<NeuedaUrl> urlsFound = urlService.findByShortUrl(shortUrl);
-			if(urlsFound.size()==1)
-				return urlsFound.get(0);
-			else{
+			if(urlsFound.size()!=1)
 				throw new NeuedaUrlNotFoundException(shortUrl);
+			
+			NeuedaUrlModel urlModel = UrlUtils.mapToUrlModel(urlsFound.get(0));	
+			
+			List<NeuedaUrlClickModel> clicksOfUrl = new ArrayList<>();
+			List<NeuedaUrlClick> clicksFound = urlClickService.findByShortUrl(shortUrl);
+			
+			for(NeuedaUrlClick currentClickObject: clicksFound){
+				clicksOfUrl.add(UrlUtils.mapToUrlClickModel(currentClickObject));
 			}
+			urlModel.setClicks(clicksOfUrl);
+			
+			return urlModel;
 		}catch (NeuedaUrlNotFoundException e) {
 			throw e;
 		}catch (Exception e) {
 			log.error(e);
 			throw new NeuedaInternalServerErrorException();
-		}
+		}		
     }
 		
 }
