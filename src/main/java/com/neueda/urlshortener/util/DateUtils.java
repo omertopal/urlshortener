@@ -8,4 +8,17 @@ public class DateUtils {
 		return Calendar.getInstance().getTime();
 		
 	}
+	
+	public static Date getOneDayBefore(){
+		Calendar cal = Calendar.getInstance();		
+		cal.add(Calendar.DATE, -1);
+		return cal.getTime();
+	}
+	
+	public static Date getOneWeekBefore(){
+		Calendar cal = Calendar.getInstance();		
+		cal.add(Calendar.DATE, -7);
+		return cal.getTime();
+	}
+	
 }

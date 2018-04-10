@@ -1,6 +1,5 @@
 package com.neueda.urlshortener.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -17,16 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.neueda.urlshortener.data.entity.NeuedaUrl;
-import com.neueda.urlshortener.data.entity.NeuedaUrlClick;
-import com.neueda.urlshortener.data.model.NeuedaUrlClickModel;
 import com.neueda.urlshortener.data.model.NeuedaUrlModel;
-import com.neueda.urlshortener.data.service.IUrlClickService;
 import com.neueda.urlshortener.data.service.IUrlService;
 import com.neueda.urlshortener.error.NeuedaEmptyInputException;
 import com.neueda.urlshortener.error.NeuedaInternalServerErrorException;
 import com.neueda.urlshortener.error.NeuedaUrlNotFoundException;
 import com.neueda.urlshortener.util.UrlConstants;
-import com.neueda.urlshortener.util.UrlUtils;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -34,10 +29,7 @@ public class ApiControllerV1 {
 	private static final Logger log = Logger.getLogger(ApiControllerV1.class);
 	
 	@Autowired
-	private IUrlService urlService;
-	
-	@Autowired
-	private IUrlClickService urlClickService;
+	private IUrlService urlService;	
 	
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -55,7 +47,7 @@ public class ApiControllerV1 {
 			if(StringUtils.isEmpty(urlTitle)){
 				throw new NeuedaEmptyInputException(UrlConstants.PARAM_URL_TITLE);
 			}
-			NeuedaUrlModel urlToBeCreated = new NeuedaUrlModel(longUrl,urlTitle,createUser);
+			NeuedaUrlModel urlToBeCreated = new NeuedaUrlModel(UrlConstants.STRING_BLANK,longUrl,urlTitle,createUser);
 			
 			return urlService.createUrl(urlToBeCreated);						
 			
@@ -77,6 +69,10 @@ public class ApiControllerV1 {
 		try{
 			log.debug("ApiControllerV1.getExpandedUrl method initiated with parameters: shortUrl="+ shortUrl );
 			
+			if(StringUtils.isEmpty(shortUrl)){
+				throw new NeuedaEmptyInputException(UrlConstants.PARAM_SHORT_URL);
+			}
+			
 			List<NeuedaUrl> urlsFound = urlService.findByShortUrl(shortUrl);
 			
 			if(urlsFound.size()==1)
@@ -84,6 +80,10 @@ public class ApiControllerV1 {
 			else{
 				throw new NeuedaUrlNotFoundException(shortUrl);
 			}
+			
+		}catch (NeuedaEmptyInputException e) {
+			log.error(e);
+			throw e;
 		}catch (NeuedaUrlNotFoundException e) {
 			throw e;
 		}catch (Exception e) {
@@ -128,6 +128,8 @@ public class ApiControllerV1 {
 		}catch (Exception e) {
 			log.error(e);
 			throw new NeuedaInternalServerErrorException();
+		}finally {
+			log.debug("ApiControllerV1.saveUrlInfo method exited");
 		}
     }
 	
@@ -139,21 +141,11 @@ public class ApiControllerV1 {
 		try{
 			log.debug("ApiControllerV1.getUrlInfo method initiated with parameters: shortUrl="+ shortUrl);
 			
-			List<NeuedaUrl> urlsFound = urlService.findByShortUrl(shortUrl);
-			if(urlsFound.size()!=1)
-				throw new NeuedaUrlNotFoundException(shortUrl);
-			
-			NeuedaUrlModel urlModel = UrlUtils.mapToUrlModel(urlsFound.get(0));	
-			
-			List<NeuedaUrlClickModel> clicksOfUrl = new ArrayList<>();
-			List<NeuedaUrlClick> clicksFound = urlClickService.findByShortUrl(shortUrl);
-			
-			for(NeuedaUrlClick currentClickObject: clicksFound){
-				clicksOfUrl.add(UrlUtils.mapToUrlClickModel(currentClickObject));
+			if(StringUtils.isEmpty(shortUrl)){
+				throw new NeuedaEmptyInputException(UrlConstants.PARAM_SHORT_URL);
 			}
-			urlModel.setClicks(clicksOfUrl);
 			
-			return urlModel;
+			return urlService.getUrlByShortUrl(shortUrl);
 			
 		}catch (NeuedaEmptyInputException e) {
 			log.error(e);
@@ -164,7 +156,10 @@ public class ApiControllerV1 {
 		}catch (Exception e) {
 			log.error(e);
 			throw new NeuedaInternalServerErrorException();
-		}		
+		}finally {
+			log.debug("ApiControllerV1.getUrlInfo method exited");
+		}
+		
     }
 		
 }

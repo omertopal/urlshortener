@@ -8,11 +8,19 @@ public class NeuedaUrlModel {
 	public NeuedaUrlModel() {
 	}
 
-	public NeuedaUrlModel(String longUrl, String urlTitle, String createUser) {
+	public NeuedaUrlModel(String shortUrl, String longUrl, String urlTitle, String createUser) {
 		super();
+		this.shortUrl = shortUrl;
 		this.longUrl = longUrl;
 		this.urlTitle = urlTitle;
 		this.createUser = createUser;
+	}
+	
+	public NeuedaUrlModel(String shortUrl, String longUrl, String urlTitle) {
+		super();
+		this.shortUrl = shortUrl;
+		this.longUrl = longUrl;
+		this.urlTitle = urlTitle;
 	}
 
 	private String shortUrl;
