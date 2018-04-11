@@ -25,35 +25,46 @@ public class UrlUtils {
 			return true;
 	}
 	
-	public static NeuedaUrlModel mapToUrlModel (NeuedaUrl url){
-		NeuedaUrlModel urlModel = new NeuedaUrlModel();
-		urlModel.setShortUrl(url.getShortUrl());
-		urlModel.setLongUrl(url.getLongUrl());
-		urlModel.setUrlTitle(url.getUrlTitle());
-		urlModel.setCreateUser(url.getCreateUser());
-		urlModel.setCreateDate(url.getCreateDate());
-		List<NeuedaUrlClickModel> clicks = new ArrayList<>();
-		urlModel.setClicks(clicks);
-		return urlModel;
+	public static NeuedaUrlModel mapToUrlModel (NeuedaUrl url) throws Exception{
+		try{	
+			NeuedaUrlModel urlModel = new NeuedaUrlModel();
+			urlModel.setShortUrl(url.getShortUrl());
+			urlModel.setLongUrl(url.getLongUrl());
+			urlModel.setUrlTitle(url.getUrlTitle());
+			urlModel.setCreateUser(url.getCreateUser());
+			urlModel.setCreateDate(url.getCreateDate());
+			List<NeuedaUrlClickModel> clicks = new ArrayList<>();
+			urlModel.setClicks(clicks);
+			return urlModel;
+		}catch (Exception e) {
+			throw e;
+		}
 	}
 	
-	public static NeuedaUrl mapToUrlEntity (NeuedaUrlModel urlModel){
-		NeuedaUrl urlEntity = new NeuedaUrl();
-		urlEntity.setShortUrl(urlModel.getShortUrl());
-		urlEntity.setLongUrl(urlModel.getLongUrl());
-		urlEntity.setUrlTitle(urlModel.getUrlTitle());
-		urlEntity.setCreateUser(urlModel.getCreateUser());
-		urlEntity.setCreateDate(urlModel.getCreateDate());		
-		return urlEntity;
+	public static NeuedaUrl mapToUrlEntity (NeuedaUrlModel urlModel) throws Exception{
+		try{
+			NeuedaUrl urlEntity = new NeuedaUrl();
+			urlEntity.setShortUrl(urlModel.getShortUrl());
+			urlEntity.setLongUrl(urlModel.getLongUrl());
+			urlEntity.setUrlTitle(urlModel.getUrlTitle());
+			urlEntity.setCreateUser(urlModel.getCreateUser());
+			urlEntity.setCreateDate(urlModel.getCreateDate());		
+			return urlEntity;
+		}catch (Exception e) {
+			throw e;
+		}
 	}
 	
-	public static NeuedaUrlClickModel mapToUrlClickModel (NeuedaUrlClick url){
-		NeuedaUrlClickModel urlClickModel = new NeuedaUrlClickModel();
-		urlClickModel.setShortUrl(url.getShortUrl());
-		urlClickModel.setIpAddress(url.getIpAddress());
-		urlClickModel.setIpLocation(url.getIpLocation());
-		urlClickModel.setClickDate(url.getClickDate());
-		return urlClickModel;
+	public static NeuedaUrlClickModel mapToUrlClickModel (NeuedaUrlClick url) throws Exception{
+		try{
+			NeuedaUrlClickModel urlClickModel = new NeuedaUrlClickModel();
+			urlClickModel.setIpAddress(url.getIpAddress());
+			urlClickModel.setIpLocation(url.getIpLocation());
+			urlClickModel.setClickDate(url.getClickDate());
+			return urlClickModel;
+		}catch (Exception e) {
+			throw e;
+		}
 		
 	}
 }

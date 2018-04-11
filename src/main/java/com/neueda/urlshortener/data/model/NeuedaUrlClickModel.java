@@ -3,9 +3,7 @@ package com.neueda.urlshortener.data.model;
 import java.util.Date;
 
 
-public class NeuedaUrlClickModel {
-	
-	private String shortUrl;
+public class NeuedaUrlClickModel {	
 	
 	private String ipLocation;
 	
@@ -18,10 +16,6 @@ public class NeuedaUrlClickModel {
 		return new com.google.gson.Gson().toJson(this);
 	}
 
-	public String getShortUrl() {
-		return shortUrl;
-	}
-
 	public String getIpLocation() {
 		return ipLocation;
 	}
@@ -32,10 +26,6 @@ public class NeuedaUrlClickModel {
 
 	public Date getClickDate() {
 		return clickDate;
-	}
-
-	public void setShortUrl(String shortUrl) {
-		this.shortUrl = shortUrl;
 	}
 
 	public void setIpLocation(String ipLocation) {

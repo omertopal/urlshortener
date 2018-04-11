@@ -59,7 +59,7 @@ public class UserController {
 	        click.setShortUrl(shortUrl);
 	        click.setClickDate(DateUtils.getCurrentDate());
 	        click.setIpAddress(request.getRemoteAddr());
-	        click.setIpLocation(UrlConstants.STRING_BLANK);
+	        click.setIpLocation(UrlConstants.DOMAIN_LOCALHOST);
 	        urlClickService.insertClick(click);
 	        
 	        response.sendRedirect(returnUrl.getLongUrl());
