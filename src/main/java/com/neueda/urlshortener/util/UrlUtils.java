@@ -14,7 +14,7 @@ public class UrlUtils {
 	
 	public static String generateShortUrl (){
 	    boolean useLetters = true;
-	    boolean useNumbers = false;	    
+	    boolean useNumbers = true;	    
 		return RandomStringUtils.random(UrlConstants.SHORT_URL_LENGTH, useLetters, useNumbers);
 	}
 	

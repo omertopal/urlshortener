@@ -9,6 +9,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,7 +36,7 @@ public class ApiControllerV1 {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RequestMapping(value = "shorten", method = RequestMethod.POST)
-    public NeuedaUrl shortenUrl(@RequestParam(name="longUrl", required=true, defaultValue="")  String longUrl,
+    public ResponseEntity<NeuedaUrl> shortenUrl(@RequestParam(name="longUrl", required=true, defaultValue="")  String longUrl,
     							@RequestParam(name="urlTitle", required=true, defaultValue="")  String urlTitle,
     							@RequestParam(name="createUser", required=true, defaultValue="")  String createUser,HttpServletResponse resp) {  				
 		
@@ -49,7 +51,8 @@ public class ApiControllerV1 {
 			}
 			NeuedaUrlModel urlToBeCreated = new NeuedaUrlModel(UrlConstants.STRING_BLANK,longUrl,urlTitle,createUser);
 			
-			return urlService.createUrl(urlToBeCreated);						
+			NeuedaUrl urlCreated = urlService.createUrl(urlToBeCreated);
+			return new ResponseEntity<NeuedaUrl>(urlCreated, HttpStatus.CREATED);
 			
 		}catch (NeuedaEmptyInputException e) {
 			throw e;
@@ -64,7 +67,7 @@ public class ApiControllerV1 {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RequestMapping(value = "expand", method = RequestMethod.GET)
-    public String getExpandedUrl(@RequestParam(name="shortUrl", required=true, defaultValue="")  String shortUrl, HttpServletResponse resp) {  
+    public ResponseEntity<String> getExpandedUrl(@RequestParam(name="shortUrl", required=true, defaultValue="")  String shortUrl, HttpServletResponse resp) {  
 		
 		try{
 			log.debug("ApiControllerV1.getExpandedUrl method initiated with parameters: shortUrl="+ shortUrl );
@@ -75,9 +78,10 @@ public class ApiControllerV1 {
 			
 			List<NeuedaUrl> urlsFound = urlService.findByShortUrl(shortUrl);
 			
-			if(urlsFound.size()==1)
-				return urlsFound.get(0).getLongUrl();
-			else{
+			if(urlsFound.size()==1){
+				String longUrl = urlsFound.get(0).getLongUrl();
+				return new ResponseEntity<String>(longUrl, HttpStatus.OK);
+			}else{
 				throw new NeuedaUrlNotFoundException(shortUrl);
 			}
 			
@@ -97,7 +101,7 @@ public class ApiControllerV1 {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RequestMapping(value = "edit", method = RequestMethod.PUT)
-    public NeuedaUrl saveUrlInfo(@RequestParam(name="shortUrl", required=true, defaultValue="")  String shortUrl,
+    public ResponseEntity<NeuedaUrl> saveUrlInfo(@RequestParam(name="shortUrl", required=true, defaultValue="")  String shortUrl,
     						  @RequestParam(name="longUrl", required=true, defaultValue="")  String longUrl, 
     						  @RequestParam(name="urlTitle", required=true, defaultValue="")  String urlTitle, HttpServletResponse resp) {  
 		
@@ -117,7 +121,8 @@ public class ApiControllerV1 {
 			}
 			
 			NeuedaUrlModel urlToBeCreated = new NeuedaUrlModel(shortUrl,longUrl,urlTitle);
-			return urlService.updateUrl(urlToBeCreated);
+			NeuedaUrl  urlCreated = urlService.updateUrl(urlToBeCreated);
+			return new ResponseEntity<NeuedaUrl>(urlCreated, HttpStatus.OK);
 			
 		}catch (NeuedaEmptyInputException e) {
 			log.error(e);
@@ -136,7 +141,7 @@ public class ApiControllerV1 {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RequestMapping(value = "info", method = RequestMethod.GET)
-    public NeuedaUrlModel getUrlInfo(@RequestParam(name="shortUrl", required=true, defaultValue="")  String shortUrl, HttpServletResponse resp) {  
+    public ResponseEntity<NeuedaUrlModel> getUrlInfo(@RequestParam(name="shortUrl", required=true, defaultValue="")  String shortUrl, HttpServletResponse resp) {  
 		
 		try{
 			log.debug("ApiControllerV1.getUrlInfo method initiated with parameters: shortUrl="+ shortUrl);
@@ -145,7 +150,8 @@ public class ApiControllerV1 {
 				throw new NeuedaEmptyInputException(UrlConstants.PARAM_SHORT_URL);
 			}
 			
-			return urlService.getUrlByShortUrl(shortUrl);
+			NeuedaUrlModel urlModel = urlService.getUrlByShortUrl(shortUrl);
+			return new ResponseEntity<NeuedaUrlModel>(urlModel, HttpStatus.OK);
 			
 		}catch (NeuedaEmptyInputException e) {
 			log.error(e);
